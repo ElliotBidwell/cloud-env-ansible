@@ -1,0 +1,8 @@
+- name: Install and Run CoreMark
+  hosts: "*"
+  become: yes
+  tasks:
+    - name: Installation python script
+      script: '../../python-scripts/run.py'
+      args:
+        executable: python3

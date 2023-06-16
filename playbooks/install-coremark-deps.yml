@@ -1,0 +1,8 @@
+- name: Install CoreMark dependencies and clone repo
+  hosts: "*"
+  become: yes
+  tasks:
+    - name: Installation python script
+      script: '../../python-scripts/install.py'
+      args:
+        executable: python3
