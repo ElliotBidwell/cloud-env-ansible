@@ -1,6 +1,13 @@
 # Group for ProxMox VM host names
 [proxmox]
 
-# Group for host names of any VM being run on your local machine
-# This will likely be unused when Ansible is implemented in our ProxMox VE
-[localvms]
+# Group for Elliot's local VMware machines
+[localvms-elliot]
+ElliotUbuntuVM
+
+# Group for Dan's local VMs
+[localvms-dan]
+
+# Group for Amy's local VMs
+[localvms-amy]
+
