@@ -31,7 +31,7 @@ ansible -i <inventory file path> <inventory group> -m ping --user <remote host u
 ```
 Use to run a playbook on each host in an inventory/group.
 ```r
-ansible-playbook -i <inventory file path> <inventory group> <playbook file path> --user <remote host username> --ask-pass --ask-become-pass
+ansible-playbook <playbook file path> -i <inventory file path> <inventory group> --user <remote host username> --ask-pass --ask-become-pass
 ```
 
 ### Arguments/Options Used Above

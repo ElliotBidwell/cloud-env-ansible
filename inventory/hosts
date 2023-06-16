@@ -2,12 +2,12 @@
 [proxmox]
 
 # Group for Elliot's local VMware machines
-[localvms-elliot]
+[localVMsElliot]
 ElliotUbuntuVM
 
 # Group for Dan's local VMs
-[localvms-dan]
+[localVMsDan]
 
 # Group for Amy's local VMs
-[localvms-amy]
+[localVMsAmy]
 
