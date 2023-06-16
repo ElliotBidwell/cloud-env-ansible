@@ -4,3 +4,4 @@
 # Group for host names of any VM being run on your local machine
 # This will likely be unused when Ansible is implemented in our ProxMox VE
 [localvms]
+ElliotUbuntuVM
