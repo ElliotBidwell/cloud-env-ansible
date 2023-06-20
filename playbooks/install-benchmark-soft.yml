@@ -1,0 +1,22 @@
+- name: Install CoreMark
+  hosts: "*"
+  become: yes
+  tasks:
+    - name: Clone CoreMark repository from GitHub
+      git:
+        repo: https://github.com/eembc/coremark.git
+        dest: /home/coremark
+        clone: yes
+        update: yes
+    - name: Run CoreMark Installation Python Script
+      script: '../../python-scripts/install.py'
+      args:
+        executable: python3
+- name: Install iperf3
+  hosts: "*"
+  become: yes
+  tasks:
+    - name: Run iperf3 Installation Python Script
+      script: ../../python-scripts/iperf-script.py
+      args:
+        executable: python3
