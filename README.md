@@ -29,15 +29,13 @@ Use to ping each host in an inventory/group.
 ```r
 ansible -i <inventory file path> <inventory group> -m ping --user <remote host username> --ask-pass
 ```
-Use to run a playbook on each host in an inventory/group.
+Use to run a playbook on each host in an inventory/group. `-e <inventory group>` designates a group of hosts within the inventory to run the playbook on.
 ```r
-ansible-playbook <playbook file path> -i <inventory file path> <inventory group> --user <remote host username> --ask-pass --ask-become-pass
+ansible-playbook <playbook file path> -i <inventory file path> -e <inventory group> --user <remote host username> --ask-pass --ask-become-pass
 ```
 
 ### Arguments/Options Used Above
-- `-i <inventory file path> <inventory group>` designates an inventory group of hosts in the selected inventory file to run a playbook against. Leave `<inventory group>` blank to run the playbook against every host in the file.
-* `--ask-pass` causes a prompt for the remote host user's password.
-* `-m ping` pings each host.
-* ``
-*
+- `--ask-pass` causes a prompt for the remote host user's password.
+* `--ask-become-pass` causes a prompt for the remote host's root password.
+* `-m ping` uses the ping module to test the ssh connection with each host.
 +
