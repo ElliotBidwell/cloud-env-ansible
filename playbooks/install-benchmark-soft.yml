@@ -16,7 +16,8 @@
   hosts: "*"
   become: yes
   tasks:
-    - name: Run iperf3 Installation Python Script
-      script: ../playbook-scripts/install-iperf.py
-      args:
-        executable: python3
+    - name: Run iperf3 APT install
+      apt:
+        name: "iperf3"
+        update_cache: yes
+        install_recommends: no
