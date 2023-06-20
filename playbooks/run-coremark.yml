@@ -1,8 +1,8 @@
-- name: Install and Run CoreMark
+- name: Run Benchmarks
   hosts: "*"
   become: yes
   tasks:
-    - name: Installation python script
+    - name: Run Python Sript to Run CoreMark
       script: '../../python-scripts/run.py'
       args:
         executable: python3
