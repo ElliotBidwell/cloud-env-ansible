@@ -3,6 +3,6 @@
   become: yes
   tasks:
     - name: Run Python Sript to Run CoreMark
-      script: '../../python-scripts/run.py'
+      script: '../playbook-scripts/run-coremark.py'
       args:
         executable: python3
