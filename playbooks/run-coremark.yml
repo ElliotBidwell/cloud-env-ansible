@@ -1,8 +1,23 @@
 - name: Run Benchmarks
   hosts: "*"
   become: yes
+  vars_prompt:
+    - name: log_dir
+      prompt: Type a local directory within your user directory in which to store CoreMark result logs.
+      private: no
+
   tasks:
-    - name: Run Python Sript to Run CoreMark
+    - name: Run Python Script to Run CoreMark
       script: '../playbook-scripts/run-coremark.py'
       args:
         executable: python3
+
+    - name: Fetch CoreMark Performance Results
+      fetch:
+        src: /home/coremark/run1.log
+        dest: '/home/ebidwell/{{ log_dir }}'
+
+    - name: Fetch CoreMark Validation Results
+      fetch:
+        src: /home/coremark/run2.log
+        dest: '/home/ebidwell/{{ log_dir }}'
