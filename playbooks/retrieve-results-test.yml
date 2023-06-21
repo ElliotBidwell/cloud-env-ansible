@@ -1,0 +1,14 @@
+- name: Test Fetching Benchmark Logs
+  hosts: "*"
+  become: yes
+  vars_prompt:
+    - name: log_dir
+      prompt: Type a local directory in which to store CoreMark result logs.
+      private: no
+
+  tasks:
+    - name: Fetch Benchmark Result Logs
+      fetch:
+        src: /home/coremark/run1.log
+        dest: '/home/{{ log_dir }}'
+  
