@@ -1,5 +1,13 @@
-# Ansible For ProxMox Cloud Environment
+# Ansible Benchmark Automation For A ProxMox Cloud Environment
 A repo for all files related to using Ansible to automate VM benchmarking in our ProxMox environment.
+
+## Important Resources
+A list of useful resources and documentation to help you learn Ansible, Python scripting, etc.
++
+* [Detailed YAML syntax documentation](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html#)
+* [Using Ansible Playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html#playbook-syntax)
+* [Ansible command line tools](https://docs.ansible.com/ansible/latest/command_guide/index.html)
+-
 
 ## Ansible Installation
 **1.** If you haven't already, update your Ubuntu.
