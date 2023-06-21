@@ -4,6 +4,7 @@
 # Group for Elliot's local VMware machines
 [localVMsElliot]
 ElliotUbuntuVM
+ElliotUbuntuVM2
 
 # Group for Dan's local VMs
 [localVMsDan]
