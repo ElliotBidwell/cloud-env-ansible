@@ -5,7 +5,7 @@ A repo for all files related to using Ansible to automate VM benchmarking in our
 A list of useful resources and documentation to help you learn Ansible, Python scripting, etc.
 +
 * [Detailed YAML syntax documentation](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html#)
-* [Using Ansible Playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html#playbook-syntax)
+* [Using Ansible playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/index.html)
 * [Ansible command line tools](https://docs.ansible.com/ansible/latest/command_guide/index.html)
 -
 
