@@ -1,8 +1,8 @@
-- name: Install CoreMark
+- name: Fresh Benchmark Suite Installation
   hosts: "*"
   become: yes
   tasks:
-    - name: Run CoreMark Installation Python Script
+    - name: Run CoreMark Dependencies Installation Script
       script: '../playbook-scripts/install-coremark-deps.py'
       args:
         executable: python3

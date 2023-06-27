@@ -1,1 +1,5 @@
 remote_host_user: ebidwell
+cpu_bench_results: '/home/{{ remote_host_user }}/coremark-results'
+net_bench_results: '/home/{{ remote_host_user }}/iperf-results'
+mem_bench_results: '/home/{{ remote_host_user }}/mem-results'
+stor_bench_results: '/home/{{ remote_host_user }}/stor-results'

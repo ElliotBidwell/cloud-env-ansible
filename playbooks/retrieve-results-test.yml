@@ -5,6 +5,10 @@
   vars_files:
     - ../vars/local_directories_vars.yml
 
+  remote_user: '{{ remote_host_user }}'
+  become_user: '{{ remote_host_user }}'
+
+
   vars_prompt:
     - name: log_dir
       prompt: Type a local directory in which to store CoreMark result logs.
@@ -14,5 +18,5 @@
     - name: Fetch Benchmark Result Logs
       fetch:
         src: /home/coremark/run1.log
-        dest: '/home/{{ remote_host_user }}/{{ log_dir }}'
+        dest: '{{ cpu_bench_results }}'
   
