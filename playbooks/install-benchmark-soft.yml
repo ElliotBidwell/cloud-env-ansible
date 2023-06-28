@@ -1,6 +1,13 @@
 - name: Fresh Benchmark Suite Installation
-  hosts: "*"
+  hosts: "proxmox"
   become: yes
+  
+  vars_files:
+    - ../vars/local_directories_vars.yml
+
+  remote_user: '{{ remote_host_user }}'
+  become_user: '{{ remote_host_user }}'
+  
   tasks:
     - name: Run CoreMark Dependencies Installation Script
       script: '../playbook-scripts/install-coremark-deps.py'
@@ -9,7 +16,7 @@
     - name: Clone CoreMark repository from GitHub
       git:
         repo: https://github.com/eembc/coremark.git
-        dest: /home/coremark
+        dest: '/home/{{ remote_host_user }}/coremark'
         clone: yes
         update: yes
 - name: Install iperf3

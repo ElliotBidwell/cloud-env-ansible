@@ -16,10 +16,10 @@
 
     - name: Fetch CoreMark Performance Results
       fetch:
-        src: /home/coremark/run1.log
+        src: '/home/{{ remote_host_user }}/coremark/run1.log'
         dest: '{{ cpu_bench_results }}'
 
     - name: Fetch CoreMark Validation Results
       fetch:
-        src: /home/coremark/run2.log
+        src: '/home/{{ remote_host_user }}/coremark/run2.log'
         dest: '{{ cpu_bench_results }}'

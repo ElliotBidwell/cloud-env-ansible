@@ -1,0 +1,17 @@
+- name: Clone CoreMark Repo
+  hosts: "proxmox"
+  become: yes
+  
+  vars_files:
+    - ../vars/local_directories_vars.yml
+
+  remote_user: '{{ remote_host_user }}'
+  become_user: '{{ remote_host_user }}'
+
+  tasks:
+    - name: Clone CoreMark repository from GitHub
+      git:
+        repo: https://github.com/eembc/coremark.git
+        dest: '/home/{{ remote_host_user }}/coremark'
+        clone: yes
+        update: yes

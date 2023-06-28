@@ -4,12 +4,12 @@
 import subprocess
 import os
 
-pwd = '//home/coremark/'
+pwd = '//home/ansadmin/coremark/'
 
 def run_cmd(command):
     p1 = subprocess.call([command], cwd=pwd)
-    results('//home/coremark/run1.log')
-    results('//home/coremark/run2.log')
+    results('//home/ansadmin/coremark/run1.log')
+    results('//home/ansadmin/coremark/run2.log')
 
 def results(runs):
     print("=======================================")

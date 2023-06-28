@@ -1,4 +1,4 @@
-remote_host_user: ebidwell
+remote_host_user: ansadmin
 cpu_bench_results: '/home/{{ remote_host_user }}/coremark-results'
 net_bench_results: '/home/{{ remote_host_user }}/iperf-results'
 mem_bench_results: '/home/{{ remote_host_user }}/mem-results'
