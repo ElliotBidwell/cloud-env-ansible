@@ -1,5 +1,5 @@
 - name: Test Fetching Benchmark Logs
-  hosts: "*"
+  hosts: "{{ host_group }}"
   become: yes
 
   vars_files:

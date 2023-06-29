@@ -1,5 +1,5 @@
 - name: Run Benchmarks
-  hosts: "*"
+  hosts: "{{ host_group }}"
   become: yes
 
   vars_files:
