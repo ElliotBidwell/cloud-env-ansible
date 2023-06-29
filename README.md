@@ -31,6 +31,30 @@ sudo apt install ansible
 ansible --version
 ```
 
+## Starting SSH Server on Remote Machines
+For the remote machines to be accessible, the need to be open to SSH connections. One way to do this is with an OpenSSH server.
+
+**1.** It usually doesn't hurt to update Ubuntu first.
+```r
+sudo apt update
+```
+
+**2.** Another very helpful package is net-tools, which allows you to easily access local IP related info.
+```r
+sudo apt install net-tools
+```
+
+**3.** Install the OpenSSH server package.
+```r
+sudo apt install openssh-server
+```
+
+**4.** Start up the SSH server.
+```r
+sudo service ssh start
+```
+To stop or restart the server, replace `start` with `stop` or `restart`, respectively.
+
 ## Important Commands
 ### Commonly Used Commands
 Use to ping each host in an inventory/group.
