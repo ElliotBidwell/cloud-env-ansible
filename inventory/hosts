@@ -1,6 +1,8 @@
 # Group for ProxMox VM host names
 [proxmox]
 ans-remote0
+ans-remote1
+ans-remote2
 
 # Group for Elliot's local VMware machines
 [localVMsElliot]
