@@ -13,6 +13,13 @@
       script: '../playbook-scripts/install-coremark-deps.py'
       args:
         executable: python3
+      register: pkg_inst_output
+      failed_when: "'Installing:' in pkg_inst_output.stdout"
+      
+    - name: Print Script stdout
+      debug:
+        msg: 'Testing'
+      
     - name: Clone CoreMark repository from GitHub
       git:
         repo: https://github.com/eembc/coremark.git

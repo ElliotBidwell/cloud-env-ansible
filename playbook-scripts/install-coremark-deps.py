@@ -24,9 +24,11 @@ def pip_install(package):
     print(f"Installed {package}")
 
 sudo_install(git_package)
-sudo_install(pip_package)
+# sudo_install(pip_package)
 
-pip_install(gitPython_pip)
-pip_install(distro_pip)
-pip_install(bs4_pip)
-pip_install(requests_pip)
+# pip_install(gitPython_pip)
+# pip_install(distro_pip)
+# pip_install(bs4_pip)
+# pip_install(requests_pip)
+print(f'Script Finished')
+
