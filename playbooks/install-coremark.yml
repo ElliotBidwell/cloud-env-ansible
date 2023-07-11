@@ -1,7 +1,15 @@
 ---
 - name: Install CoreMark Benchmark on Ubuntu
-  hosts: target_machine
+  hosts: "{{ host_group }}"
   gather_facts: true
+  # become: yes
+  become_user: root
+  
+  vars_files:
+    - ../vars/local_directories_vars.yml
+
+  # remote_user: '{{ remote_host_user }}'
+  # become_user: '{{ remote_host_user }}'
 
   tasks:
     - name: Update apt cache
@@ -35,8 +43,11 @@
         var: apt_output.stdout_lines
 
 - name: Execute CoreMark Benchmark
-  hosts: target_machine
+  hosts: "{{ host_group }}"
   gather_facts: false
+  become_user: root
+
+  # remote_user: '{{ remote_host_user }}'
 
   tasks:
     - name: Run CoreMark
