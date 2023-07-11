@@ -1,6 +1,6 @@
 ---
 - name: Install iperf3 Benchmark on Ubuntu
-  hosts: target_machine
+  hosts: "{{ host_group }}"
   gather_facts: true
 
   tasks:
@@ -42,12 +42,13 @@
         var: apt_output.stdout_lines
 
 - name: Execute iperf3 Benchmark
-  hosts: target_machine
+  hosts: "{{ host_group }}"
   gather_facts: false
 
   tasks:
     - name: Run iperf3 server
       command: iperf3 -s
+      # delegate_to: 127.0.0.1
       async: 3600
       poll: 0
       register: iperf_server_output
