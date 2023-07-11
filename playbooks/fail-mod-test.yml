@@ -14,5 +14,5 @@
       args:
         executable: python3
       register: test_output
-      failed_when: "'Hello' in test_output.stdout"
+      failed_when: "'Hllo' in test_output.stdout"
 

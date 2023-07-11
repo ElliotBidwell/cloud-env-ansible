@@ -1,6 +1,6 @@
 # Group for ProxMox VM host names
 [proxmox]
-ans-remote0
+# ans-remote0
 ans-remote1
 ans-remote2
 
