@@ -1,0 +1,43 @@
+---
+- name: Install iperf3 Benchmark on Local Machine
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: true
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: true
+
+    - name: Install dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      become: true
+      with_items:
+        - build-essential
+        - git
+        - libbz2-dev
+        - libssl-dev
+        - zlib1g-dev
+      register: apt_output
+
+    - name: Clone iperf3 repository
+      git:
+        repo: https://github.com/esnet/iperf.git
+        dest: /tmp/iperf
+      become: true
+
+    - name: Configure and build iperf3
+      shell: |
+        cd /tmp/iperf
+        ./configure
+        make
+        make install
+      become: true
+
+  handlers:
+    - name: Display apt output
+      debug:
+        var: apt_output.stdout_lines
