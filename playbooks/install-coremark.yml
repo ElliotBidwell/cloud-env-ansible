@@ -1,0 +1,48 @@
+---
+- name: Install CoreMark Benchmark on Ubuntu
+  hosts: target_machine
+  gather_facts: true
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: true
+
+    - name: Install dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      become: true
+      with_items:
+        - build-essential
+        - git
+      register: apt_output
+
+    - name: Clone CoreMark repository
+      git:
+        repo: https://github.com/eembc/coremark.git
+        dest: /tmp/coremark
+      become: true
+
+    - name: Compile CoreMark
+      command: make -C /tmp/coremark
+      become: true
+
+  handlers:
+    - name: Display apt output
+      debug:
+        var: apt_output.stdout_lines
+
+- name: Execute CoreMark Benchmark
+  hosts: target_machine
+  gather_facts: false
+
+  tasks:
+    - name: Run CoreMark
+      command: /tmp/coremark/coremark.exe
+      register: coremark_output
+
+    - name: Display CoreMark output
+      debug:
+        var: coremark_output.stdout_lines
