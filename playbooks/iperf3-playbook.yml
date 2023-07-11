@@ -1,0 +1,65 @@
+---
+- name: Install iperf3 Benchmark on Ubuntu
+  hosts: target_machine
+  gather_facts: true
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: true
+
+    - name: Install dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      become: true
+      with_items:
+        - build-essential
+        - git
+        - libbz2-dev
+        - libssl-dev
+        - zlib1g-dev
+      register: apt_output
+
+    - name: Clone iperf3 repository
+      git:
+        repo: https://github.com/esnet/iperf.git
+        dest: /tmp/iperf
+      become: true
+
+    - name: Configure and build iperf3
+      shell: |
+        cd /tmp/iperf
+        ./configure
+        make
+        make install
+      become: true
+
+  handlers:
+    - name: Display apt output
+      debug:
+        var: apt_output.stdout_lines
+
+- name: Execute iperf3 Benchmark
+  hosts: target_machine
+  gather_facts: false
+
+  tasks:
+    - name: Run iperf3 server
+      command: iperf3 -s
+      async: 3600
+      poll: 0
+      register: iperf_server_output
+
+    - name: Display iperf3 server output
+      debug:
+        var: iperf_server_output.stdout_lines
+
+    - name: Run iperf3 client
+      command: iperf3 -c {{ iperf_server_host }} -t {{ iperf_duration }}
+      register: iperf_client_output
+
+    - name: Display iperf3 client output
+      debug:
+        var: iperf_client_output.stdout_lines
