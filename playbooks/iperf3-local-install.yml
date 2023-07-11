@@ -10,32 +10,12 @@
         update_cache: yes
       become: true
 
-    - name: Install dependencies
+    - name: Install iperf3
       apt:
-        name: "{{ item }}"
+        name: iperf3
         state: present
       become: true
-      with_items:
-        - build-essential
-        - git
-        - libbz2-dev
-        - libssl-dev
-        - zlib1g-dev
       register: apt_output
-
-    - name: Clone iperf3 repository
-      git:
-        repo: https://github.com/esnet/iperf.git
-        dest: /tmp/iperf
-      become: true
-
-    - name: Configure and build iperf3
-      shell: |
-        cd /tmp/iperf
-        ./configure
-        make
-        make install
-      become: true
 
   handlers:
     - name: Display apt output

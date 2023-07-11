@@ -1,6 +1,6 @@
 ---
-- name: Install iperf3 Benchmark on Ubuntu
-  hosts: all
+- name: Install iperf3 Benchmark on Ubuntu Remote Machines
+  hosts: proxmoxremote
   gather_facts: true
 
   tasks:
@@ -15,8 +15,9 @@
         state: present
       become: true
 
-- name: Execute iperf3 Benchmark
-  hosts: controller_machine
+- name: Execute iperf3 Benchmark Server
+  hosts: proxmoxlocal
+  connection: local
   gather_facts: false
 
   tasks:
@@ -29,16 +30,18 @@
     - name: Display iperf3 server output
       debug:
         var: iperf_server_output.stdout_lines
-
-- name: Execute iperf3 Benchmark
-  hosts: remote_machines
+      
+- name: Execute iperf3 Benchmark Client
+  hosts: proxmoxremote
+  serial: 1
   gather_facts: false
 
   tasks:
-    - name: Run iperf3 client
-      command: iperf3 -c {{ controller_machine }} -t {{ iperf_duration }}
+    - name: Run iperf3 client connections
+      command: iperf3 -c 10.50.0.25 -t 10
       register: iperf_client_output
 
     - name: Display iperf3 client output
       debug:
         var: iperf_client_output.stdout_lines
+
