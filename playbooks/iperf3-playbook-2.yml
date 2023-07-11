@@ -27,9 +27,9 @@
       poll: 0
       register: iperf_server_output
 
-    - name: Display iperf3 server output
-      debug:
-        var: iperf_server_output.stdout_lines
+#    - name: Display iperf3 server output
+#      debug:
+#        var: iperf_server_output.stdout_lines
       
 - name: Execute iperf3 Benchmark Client
   hosts: proxmoxremote
@@ -44,4 +44,18 @@
     - name: Display iperf3 client output
       debug:
         var: iperf_client_output.stdout_lines
+        
+- name: Kill iperf3 Server
+  hosts: proxmoxlocal
+  connection: local
+  gather_facts: false
+  
+  tasks:
+    - name: Run killall on iperf3
+      command: killall iperf3
+      register: iperf_server_output
+
+    - name: Display iperf3 server output
+      debug:
+        var: iperf_server_output.stdout_lines   
 
