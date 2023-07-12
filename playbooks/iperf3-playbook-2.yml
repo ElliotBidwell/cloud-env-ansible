@@ -22,7 +22,7 @@
 
   tasks:
     - name: Start iperf3 server
-      command: iperf3 -s
+      command: iperf3 -s -F /var/log/iperf3/output.txt --logfile /var/log/iperf3/log.txt
       async: 3600
       poll: 0
       register: iperf_server_output
