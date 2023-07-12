@@ -1,0 +1,108 @@
+
+PLAY [Install CoreMark Benchmark on Ubuntu] ************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [ans-remote1]
+ok: [ans-remote2]
+ok: [ans-remote0]
+
+TASK [Update apt cache] ********************************************************
+changed: [ans-remote0]
+changed: [ans-remote1]
+changed: [ans-remote2]
+
+TASK [Install dependencies] ****************************************************
+ok: [ans-remote1] => (item=build-essential)
+ok: [ans-remote0] => (item=build-essential)
+ok: [ans-remote2] => (item=build-essential)
+ok: [ans-remote1] => (item=git)
+ok: [ans-remote0] => (item=git)
+ok: [ans-remote2] => (item=git)
+
+TASK [Clone CoreMark repository] ***********************************************
+ok: [ans-remote1]
+ok: [ans-remote0]
+ok: [ans-remote2]
+
+TASK [Compile CoreMark] ********************************************************
+changed: [ans-remote2]
+changed: [ans-remote1]
+changed: [ans-remote0]
+
+PLAY [Execute CoreMark Benchmark] **********************************************
+
+TASK [Run CoreMark] ************************************************************
+changed: [ans-remote0]
+changed: [ans-remote1]
+changed: [ans-remote2]
+
+TASK [Display CoreMark output] *************************************************
+ok: [ans-remote0] => {
+    "coremark_output.stdout_lines": [
+        "2K performance run parameters for coremark.",
+        "CoreMark Size    : 666",
+        "Total ticks      : 17981",
+        "Total time (secs): 17.981000",
+        "Iterations/Sec   : 6117.568545",
+        "Iterations       : 110000",
+        "Compiler version : GCC11.3.0",
+        "Compiler flags   : -O2 -DPERFORMANCE_RUN=1  -lrt",
+        "Memory location  : Please put data memory location here",
+        "\t\t\t(e.g. code in flash, data on heap etc)",
+        "seedcrc          : 0xe9f5",
+        "[0]crclist       : 0xe714",
+        "[0]crcmatrix     : 0x1fd7",
+        "[0]crcstate      : 0x8e3a",
+        "[0]crcfinal      : 0x33ff",
+        "Correct operation validated. See README.md for run and reporting rules.",
+        "CoreMark 1.0 : 6117.568545 / GCC11.3.0 -O2 -DPERFORMANCE_RUN=1  -lrt / Heap"
+    ]
+}
+ok: [ans-remote1] => {
+    "coremark_output.stdout_lines": [
+        "2K performance run parameters for coremark.",
+        "CoreMark Size    : 666",
+        "Total ticks      : 17970",
+        "Total time (secs): 17.970000",
+        "Iterations/Sec   : 6121.313300",
+        "Iterations       : 110000",
+        "Compiler version : GCC11.3.0",
+        "Compiler flags   : -O2 -DPERFORMANCE_RUN=1  -lrt",
+        "Memory location  : Please put data memory location here",
+        "\t\t\t(e.g. code in flash, data on heap etc)",
+        "seedcrc          : 0xe9f5",
+        "[0]crclist       : 0xe714",
+        "[0]crcmatrix     : 0x1fd7",
+        "[0]crcstate      : 0x8e3a",
+        "[0]crcfinal      : 0x33ff",
+        "Correct operation validated. See README.md for run and reporting rules.",
+        "CoreMark 1.0 : 6121.313300 / GCC11.3.0 -O2 -DPERFORMANCE_RUN=1  -lrt / Heap"
+    ]
+}
+ok: [ans-remote2] => {
+    "coremark_output.stdout_lines": [
+        "2K performance run parameters for coremark.",
+        "CoreMark Size    : 666",
+        "Total ticks      : 17958",
+        "Total time (secs): 17.958000",
+        "Iterations/Sec   : 6125.403720",
+        "Iterations       : 110000",
+        "Compiler version : GCC11.3.0",
+        "Compiler flags   : -O2 -DPERFORMANCE_RUN=1  -lrt",
+        "Memory location  : Please put data memory location here",
+        "\t\t\t(e.g. code in flash, data on heap etc)",
+        "seedcrc          : 0xe9f5",
+        "[0]crclist       : 0xe714",
+        "[0]crcmatrix     : 0x1fd7",
+        "[0]crcstate      : 0x8e3a",
+        "[0]crcfinal      : 0x33ff",
+        "Correct operation validated. See README.md for run and reporting rules.",
+        "CoreMark 1.0 : 6125.403720 / GCC11.3.0 -O2 -DPERFORMANCE_RUN=1  -lrt / Heap"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+ans-remote0                : ok=7    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ans-remote1                : ok=7    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ans-remote2                : ok=7    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
