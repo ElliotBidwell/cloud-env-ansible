@@ -15,47 +15,41 @@
         state: present
       become: true
 
-- name: Execute iperf3 Benchmark Server
+- name: Start iperf3 Benchmark Server
   hosts: proxmoxlocal
   connection: local
   gather_facts: false
+  become: yes
 
   tasks:
-    - name: Start iperf3 server
+    - name: Start server from local command line
       command: iperf3 -s -F /var/log/iperf3/output.txt --logfile /var/log/iperf3/log.txt
       async: 3600
       poll: 0
-      register: iperf_server_output
-
-#    - name: Display iperf3 server output
-#      debug:
-#        var: iperf_server_output.stdout_lines
+#      register: iperf_server_output
       
-- name: Execute iperf3 Benchmark Client
+- name: Execute iperf3 Benchmark Client Connections
   hosts: proxmoxremote
   serial: 1
   gather_facts: false
 
   tasks:
-    - name: Run iperf3 client connections
+    - name: Connect iperf3 clients from command line
       command: iperf3 -c 10.50.0.25 -t 10
       register: iperf_client_output
 
-    - name: Display iperf3 client output
+    - name: Displaying iperf3 client-end results
       debug:
         var: iperf_client_output.stdout_lines
         
-- name: Kill iperf3 Server
+- name: Stop iperf3 Benchmark Server
   hosts: proxmoxlocal
   connection: local
-  gather_facts: false
+  gather_facts: true
+  become: yes
   
   tasks:
-    - name: Run killall on iperf3
+    - name: Run killall command on iperf3 server
       command: killall iperf3
-      register: iperf_server_output
 
-    - name: Display iperf3 server output
-      debug:
-        var: iperf_server_output.stdout_lines   
 
