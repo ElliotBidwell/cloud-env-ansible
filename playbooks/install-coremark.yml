@@ -46,6 +46,9 @@
   hosts: "{{ host_group }}"
   gather_facts: false
   become_user: root
+  
+  vars_files:
+    - ../vars/local_directories_vars.yml
 
   # remote_user: '{{ remote_host_user }}'
 
@@ -57,3 +60,13 @@
     - name: Display CoreMark output
       debug:
         var: coremark_output.stdout_lines
+        
+    - name: Fetch CoreMark Performance Results
+      fetch:
+        src: '/tmp/coremark/run1.log'
+        dest: '{{ cpu_bench_results }}'
+
+    - name: Fetch CoreMark Validation Results
+      fetch:
+        src: '/tmp/coremark/run2.log'
+        dest: '{{ cpu_bench_results }}'
