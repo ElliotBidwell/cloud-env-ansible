@@ -26,16 +26,19 @@
       command: iperf3 -s -F /var/log/iperf3/output.txt --logfile /var/log/iperf3/log.txt
       async: 3600
       poll: 0
-#      register: iperf_server_output
       
 - name: Execute iperf3 Benchmark Client Connections
   hosts: proxmoxremote
   serial: 1
   gather_facts: false
+  become: yes
+  
+  vars_files:
+    - ../vars/local_directories_vars.yml
 
   tasks:
     - name: Connect iperf3 clients from command line
-      command: iperf3 -c 10.50.0.25 -t 10
+      command: iperf3 -c {{ local_ip }} -t 10
       register: iperf_client_output
 
     - name: Displaying iperf3 client-end results
