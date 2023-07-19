@@ -1,0 +1,40 @@
+---
+- name: Install Phoronix Test Suite and RAMspeed SMP Benchmark
+  hosts: proxmoxremote
+  become: true
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Add Phoronix Test Suite repository
+      apt_repository:
+        repo: "deb http://phoronix-test-suite.com/releases/repo/pts.debian {{ ansible_distribution_release }} main"
+        state: present
+
+    - name: Install required dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - php-cli
+        - php-xml
+        - php-gd
+        - php-zip
+        - php-mbstring
+        - unzip
+        - gnuplot
+        - libgd-dev
+        - zlib1g-dev
+
+    - name: Install Phoronix Test Suite
+      apt:
+        name: phoronix-test-suite=10.8.4
+        state: present
+
+    - name: Run Phoronix Test Suite setup (skip prompts)
+      command: phoronix-test-suite batch-setup
+
+    - name: Install RAMspeed SMP benchmark
+      command: phoronix-test-suite install ramspeed
