@@ -10,7 +10,7 @@
 
     - name: Install required packages
       apt:
-        name: ['git', 'php', 'php-cli', 'php-dom', 'php-json', 'php-xml', 'php-zip', 'php-gd', 'php-mbstring', 'php-tokenizer', 'php-xmlwriter', 'php-curl', 'php-pear', 'php-pcre', 'unzip']
+        name: ['git', 'php', 'php-cli', 'php-dom', 'php-json', 'php-xml', 'php-zip', 'php-gd', 'php-mbstring', 'php-tokenizer', 'php-xmlwriter', 'php-curl', 'php-pear', 'unzip']
       become: true
 
     - name: Clone Phoronix Test Suite from GitHub
@@ -19,11 +19,11 @@
         dest: /opt/phoronix-test-suite
       become: true
 
-    - name: Checkout specific Phoronix Test Suite version
-      command: git checkout 10.8.4
-      args:
-        chdir: /opt/phoronix-test-suite
-      become: true
+#    - name: Checkout specific Phoronix Test Suite version
+#      command: git checkout 10.8.4
+#      args:
+#        chdir: /opt/phoronix-test-suite
+#      become: true
 
     - name: Install Phoronix Test Suite
       command: ./install-sh
