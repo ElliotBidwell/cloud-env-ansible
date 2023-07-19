@@ -6,8 +6,8 @@ A list of useful resources and documentation to help you learn Ansible, Python s
 +
 * [Detailed YAML syntax documentation](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html#)
 * [Using Ansible playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/index.html)
-* [Ansible command line tools](https://docs.ansible.com/ansible/latest/command_guide/index.html)
--
+- [Ansible command line tools](https://docs.ansible.com/ansible/latest/command_guide/index.html)
+
 
 ## Ansible Installation
 **1.** If you haven't already, update your Ubuntu.
@@ -65,9 +65,18 @@ Use to run a playbook on each host in an inventory/group. `-e <inventory group>`
 ```r
 ansible-playbook <playbook file path> -i <inventory file path> -e <inventory group> --user <remote host username> --ask-pass --ask-become-pass
 ```
+### Commands Used to Run Benchmarks
+To install and run the CoreMark CPU benchmark.
+```r
+ansible-playbook ./playbooks/coremark-playbook.yml -i ./inventory/hosts --user ansadmin --ask-pass --ask-become-pass
+```
+To install and run the iperf3 network speed benchmark.
+```r
+ansible-playbook ./playbooks/iperf3-playbook-2.yml -i ./inventory/hosts --user ansadmin --ask-pass --ask-become-pass
+```
 
 ### Arguments/Options Used Above
 - `--ask-pass` causes a prompt for the remote host user's password.
 * `--ask-become-pass` causes a prompt for the remote host's root password.
 * `-m ping` uses the ping module to test the ssh connection with each host.
-+
++ `--start-at-task="<task name>"` runs a play or playbook starting at a designated task `<task name>`. Useful for debugging.
