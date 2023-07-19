@@ -2,6 +2,7 @@
 - name: Install Phoronix Test Suite and RAMspeed SMP Benchmark
   hosts: proxmoxremote
   become: true
+  gather_facts: true
 
   tasks:
     - name: Update apt cache
