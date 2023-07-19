@@ -72,7 +72,7 @@ ansible-playbook ./playbooks/coremark-playbook.yml -i ./inventory/hosts --user a
 ```
 To install and run the iperf3 network speed benchmark.
 ```r
-ansible-playbook ./playbooks/iperf3-playbook-2.yml -i ./inventory/hosts --user ansadmin --ask-pass --ask-become-pass
+ansible-playbook ./playbooks/iperf3-playbook.yml -i ./inventory/hosts --user ansadmin --ask-pass --ask-become-pass
 ```
 
 ### Arguments/Options Used Above
