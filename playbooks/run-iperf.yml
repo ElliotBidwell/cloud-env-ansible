@@ -1,8 +1,0 @@
-- name: Run iPerf3
-  hosts: "*"
-  become: yes
-  tasks:
-    - name: Run Python Script to Run iPerf3
-      script: '../playbook-scripts/run-iperf3.py'
-      args:
-        executable: python3
