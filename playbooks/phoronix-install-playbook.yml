@@ -1,41 +1,44 @@
 ---
-- name: Install Phoronix Test Suite and RAMspeed SMP Benchmark
+- name: Install Phoronix Test Suite and RAMspeed SMP on Ubuntu Desktop
   hosts: proxmoxremote
   become: true
-  gather_facts: true
-
   tasks:
     - name: Update apt cache
       apt:
         update_cache: yes
+      become: true
 
-    - name: Add Phoronix Test Suite repository
-      apt_repository:
-        repo: "deb http://phoronix-test-suite.com/releases/repo/pts.debian {{ ansible_distribution_release }} main"
-        state: present
-
-    - name: Install required dependencies
+    - name: Install required packages
       apt:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - php-cli
-        - php-xml
-        - php-gd
-        - php-zip
-        - php-mbstring
-        - unzip
-        - gnuplot
-        - libgd-dev
-        - zlib1g-dev
+        name: ['git', 'php', 'php-cli', 'php-dom', 'php-json', 'php-xml', 'php-zip', 'php-gd', 'php-mbstring', 'php-tokenizer', 'php-xmlwriter', 'php-curl', 'php-pear', 'php-pcre', 'unzip']
+      become: true
+
+    - name: Clone Phoronix Test Suite from GitHub
+      git:
+        repo: https://github.com/phoronix-test-suite/phoronix-test-suite.git
+        dest: /opt/phoronix-test-suite
+      become: true
+
+    - name: Checkout specific Phoronix Test Suite version
+      command: git checkout 10.8.4
+      args:
+        chdir: /opt/phoronix-test-suite
+      become: true
 
     - name: Install Phoronix Test Suite
-      apt:
-        name: phoronix-test-suite=10.8.4
-        state: present
+      command: ./install-sh
+      args:
+        chdir: /opt/phoronix-test-suite
+      become: true
 
-    - name: Run Phoronix Test Suite setup (skip prompts)
-      command: phoronix-test-suite batch-setup
+    - name: Run Phoronix Test Suite Self-Test
+      command: ./phoronix-test-suite self-test
+      args:
+        chdir: /opt/phoronix-test-suite
+      become: true
 
     - name: Install RAMspeed SMP benchmark
-      command: phoronix-test-suite install ramspeed
+      command: ./phoronix-test-suite install ram-speed
+      args:
+        chdir: /opt/phoronix-test-suite
+      become: true
