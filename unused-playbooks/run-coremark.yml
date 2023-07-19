@@ -1,0 +1,25 @@
+- name: Run Benchmarks
+  hosts: "{{ host_group }}"
+  become: yes
+
+  vars_files:
+    - ../vars/local_directories_vars.yml
+
+  remote_user: '{{ remote_host_user }}'
+  become_user: '{{ remote_host_user }}'
+
+  tasks:
+    - name: Run Python Script to Run CoreMark
+      script: '../playbook-scripts/run-coremark.py'
+      args:
+        executable: python3
+
+    - name: Fetch CoreMark Performance Results
+      fetch:
+        src: '/home/{{ remote_host_user }}/coremark/run1.log'
+        dest: '{{ cpu_bench_results }}'
+
+    - name: Fetch CoreMark Validation Results
+      fetch:
+        src: '/home/{{ remote_host_user }}/coremark/run2.log'
+        dest: '{{ cpu_bench_results }}'

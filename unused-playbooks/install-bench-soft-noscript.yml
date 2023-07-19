@@ -1,0 +1,61 @@
+- name: Fresh Benchmark Suite Installation
+  hosts: "{{ host_group }}"
+  become: yes
+  
+  vars_files:
+    - ../vars/local_directories_vars.yml
+
+  remote_user: '{{ remote_host_user }}'
+  become_user: '{{ remote_host_user }}'
+  
+  tasks:
+    - name: Install Git
+      command: sudo apt install -y git-all
+      
+    - name: Install Git
+      become: yes
+      apt:
+        name: git-all
+        update_cache: yes
+    
+    - name: Install Python3-pip
+      become: yes
+      apt:
+        name: python3-pip
+        update_cache: yes
+    
+    - name: Install GitPython
+      become: yes
+      pip:
+        name: GitPython   
+
+    - name: Install distro
+      become: yes
+      pip:
+        name: distro
+
+    - name: Install bs4
+      become: yes
+      pip:
+        name: bs4        
+
+    - name: Install requests
+      become: yes
+      pip:
+        name: requests
+    
+    - name: Clone CoreMark repository from GitHub
+      git:
+        repo: https://github.com/eembc/coremark.git
+        dest: '/home/{{ remote_host_user }}/coremark'
+        clone: yes
+        update: yes
+- name: Install iperf3
+  hosts: "*"
+  become: yes
+  tasks:
+    - name: Run iperf3 APT install
+      apt:
+        name: "iperf3"
+        update_cache: yes
+        install_recommends: no
