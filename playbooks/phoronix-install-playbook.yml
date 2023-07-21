@@ -1,6 +1,6 @@
 ---
 - name: Install Phoronix Test Suite and RAMspeed SMP on Ubuntu Desktop
-  hosts: proxmoxremote
+  hosts: ans-remote2
   become: true
   tasks:
     - name: Update apt cache
@@ -8,22 +8,20 @@
         update_cache: yes
       become: true
 
-    - name: Install required packages
+    - name: Install Required APT Packages
       apt:
-        name: ['git', 'php', 'php-cli', 'php-dom', 'php-json', 'php-xml', 'php-zip', 'php-gd', 'php-mbstring', 'php-tokenizer', 'php-xmlwriter', 'php-curl', 'php-pear', 'unzip']
+        name: ['git', 'php', 'php-cli', 'php-dom', 'php-json', 'php-xml', 'php-zip', 'php-gd', 'php-mbstring', 'php-tokenizer', 'php-xmlwriter', 'php-curl', 'php-pear', 'unzip', 'python3-pip', 'python-setuptools', 'virtualenv']
       become: true
+
+    - name: Install pexpect Package Using python3-pip 
+      pip:
+        name: pexpect
 
     - name: Clone Phoronix Test Suite from GitHub
       git:
         repo: https://github.com/phoronix-test-suite/phoronix-test-suite.git
         dest: /opt/phoronix-test-suite
       become: true
-
-#    - name: Checkout specific Phoronix Test Suite version
-#      command: git checkout 10.8.4
-#      args:
-#        chdir: /opt/phoronix-test-suite
-#      become: true
 
     - name: Install Phoronix Test Suite
       command: ./install-sh
@@ -39,6 +37,12 @@
 
     - name: Install RAMspeed SMP benchmark
       command: ./phoronix-test-suite install ram-speed
+      args:
+        chdir: /opt/phoronix-test-suite
+      become: true
+      
+    - name: Install Flexible I/O Storage Benchmark Suite
+      command: ./phoronix-test-suite install fio
       args:
         chdir: /opt/phoronix-test-suite
       become: true
