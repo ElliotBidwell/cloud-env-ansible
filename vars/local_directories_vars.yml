@@ -1,6 +1,6 @@
 remote_host_user: ansadmin
 local_ip: 10.50.0.25
-cpu_bench_results: '/home/{{ remote_host_user }}/coremark-results'
-net_bench_results: '/home/{{ remote_host_user }}/iperf-results'
-mem_bench_results: '/home/{{ remote_host_user }}/mem-results'
-stor_bench_results: '/home/{{ remote_host_user }}/stor-results'
+loc_cpu_bench_results: '/home/{{ remote_host_user }}/coremark-results'
+loc_net_bench_results: '/home/{{ remote_host_user }}/iperf-results'
+loc_mem_bench_results: '/home/{{ remote_host_user }}/mem-results'
+loc_stor_bench_results: '/home/{{ remote_host_user }}/stor-results'
