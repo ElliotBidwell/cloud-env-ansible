@@ -58,9 +58,9 @@
     - name: Fetch CoreMark Performance Results
       fetch:
         src: '/tmp/coremark/run1.log'
-        dest: '{{ cpu_bench_results }}'
+        dest: '{{ loc_cpu_bench_results }}'
 
     - name: Fetch CoreMark Validation Results
       fetch:
         src: '/tmp/coremark/run2.log'
-        dest: '{{ cpu_bench_results }}'
+        dest: '{{ loc_cpu_bench_results }}'
