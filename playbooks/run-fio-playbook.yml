@@ -1,0 +1,36 @@
+---
+- name: Execute Flexible I/O Storage Benchmark
+  hosts: ans-remote2
+  become: true
+  
+  vars_prompt:
+  
+  - name: test_type
+    prompt: |
+      Select the type of test to run:
+    private: false
+  
+  tasks:
+  - name: Handle FIO Errors
+    block:
+      - name: Execute FIO from command line
+        expect:
+          command: phoronix-test-suite benchmark fio
+          responses:
+            "Type:": "1"
+            "Engine:": "1"
+            "Buffered:": "1"
+            "Direct:": "1"
+            "Block Size:": "1"
+            "Disk Target:": "1"
+            "Would you like to save these test results \\(Y\\/n\\):": "n"
+          echo: true
+          timeout: null
+        register: fio_out
+
+    always:
+      - name: Display Results
+        debug:
+          var: fio_out
+
+      
