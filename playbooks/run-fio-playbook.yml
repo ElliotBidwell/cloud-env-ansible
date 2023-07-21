@@ -3,6 +3,10 @@
   hosts: ans-remote2
   become: true
   
+  vars_files:
+    - ../vars/local_directories_vars.yml
+    - ../vars/remote_vars.yml
+
   vars_prompt:
   
   - name: test_type
@@ -32,5 +36,9 @@
       - name: Display Results
         debug:
           var: fio_out
+  - name: Retrieve FIO Results Files
+    fetch:
+      src: '{{ rem_stor_bench_results }}'
+      dest: '{{ loc_stor_bench_results }}'
 
       
