@@ -1,7 +1,7 @@
 ---
 - name: Execute Flexible I/O Storage Benchmark
   hosts: ans-remote2
-  become: true
+  become: false
   
   vars_files:
     - ../vars/local_directories_vars.yml
@@ -11,7 +11,79 @@
   
   - name: test_type
     prompt: |
-      Select the type of test to run:
+      Select the type of test to run
+      
+      1: Random Read
+      2: Random Write
+      3: Sequential Read
+      4: Sequential Write
+      5: Test All Options
+      ** Multiple items can be selected, delimit by a comma. **
+      Type
+    private: false
+    
+  - name: test_engine
+    prompt: |
+        
+        Choose the test engine
+        
+        1: IO_uring
+        2: POSIX AIO
+        3: Sync
+        4: Linux AIO
+        5: Test All Options
+        ** Multiple items can be selected, delimit by a comma. **
+        Engine
+    private: false
+
+  - name: test_buffer
+    prompt: |
+        
+        Buffer I/O?
+    
+        1: Yes
+        2: No
+        3: Test All Options
+        ** Multiple items can be selected, delimit by a comma. **
+        Buffered
+    private: false
+  
+  - name: test_direct
+    prompt: |
+        
+        Direct I/O?
+        
+        1: No
+        2: Yes
+        3: Test All Options
+        ** Multiple items can be selected, delimit by a comma. **
+        Direct
+    private: false
+  
+  - name: test_block
+    prompt: |
+        
+        Choose block size
+        
+        1:  4KB
+        2:  8KB
+        3:  16KB
+        4:  32KB
+        5:  64KB
+        6:  128KB
+        7:  256KB
+        8:  512KB
+        9:  1MB
+        10: 2MB
+        11: 4MB
+        12: 8MB
+        13: Test All Options
+        ** Multiple items can be selected, delimit by a comma. **
+        Block Size
+    private: false
+    
+  - name: test_filename
+    prompt: Enter a name for the result file (do not include file extension)
     private: false
   
   tasks:
@@ -21,7 +93,7 @@
         expect:
           command: phoronix-test-suite benchmark fio
           responses:
-            "Type:": "1"
+            "Type:": "{{ test_type }}"
             "Engine:": "1"
             "Buffered:": "1"
             "Direct:": "1"
@@ -31,14 +103,22 @@
           echo: true
           timeout: null
         register: fio_out
+        become: true
 
     always:
       - name: Display Results
         debug:
           var: fio_out
+        become: true
+          
+  - name: Locate log files in remote file system and copy to results directory
+    command: "find . -path './*/test-4.log' -exec cp {} {{ rem_stor_bench_results }}/test-4.log \\;"
+    args:
+      chdir: "{{ phoronix_results }}"
+  
   - name: Retrieve FIO Results Files
     fetch:
-      src: '{{ rem_stor_bench_results }}'
+      src: '{{ rem_stor_bench_results }}/test-4.log'
       dest: '{{ loc_stor_bench_results }}'
 
       
