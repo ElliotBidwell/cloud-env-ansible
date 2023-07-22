@@ -1,1 +1,2 @@
-rem_stor_bench_results: '/var/lib/phoronix-test-suite/test-results'
+phoronix_results: '/var/lib/phoronix-test-suite/test-results'
+rem_stor_bench_results: '/home/{{ remote_host_user }}/fio-results'
