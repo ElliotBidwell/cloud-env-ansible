@@ -1,4 +1,14 @@
 ---
+#- name: Fetch date and time from local machine
+#  hosts: proxmoxlocal
+#  connection: local
+#  become: yes
+#  
+#  tasks:
+#    - name: Fetch the date and time from local machine
+#      command: date +%m-%d-%y_%H:%M
+#      register: local_date
+
 - name: Retrieve Flexible I/O Storage Benchmark Results
   hosts: ans-remote2
   become: false
@@ -7,9 +17,15 @@
     - ../vars/local_directories_vars.yml
     - ../vars/remote_vars.yml
 
+  vars:
+    file_timestamp: "{{ ansible_date_time['date'] }}_{{ ansible_date_time['time'] }}"
+
   tasks:
-  
+    - name: Print date and time
+      debug:
+        msg: "{{ ansible_date_time['date'] }}_{{ ansible_date_time['time'] }}"
+    
     - name: Locate log files in remote file system and copy to blank log
-      command: "find . -path './*/test-4.log' -exec cp {} /home/{{ remote_host_user }}/fio-results/test7.log \\;"
+      command: "find . -path './*/test-4.log' -exec cp {} {{ rem_stor_bench_results }}/test-4_{{ file_timestamp }}.log \\;"
       args:
-        chdir: "/var/lib/phoronix-test-suite/test-results"
+        chdir: "{{ phoronix_results }}"
