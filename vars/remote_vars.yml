@@ -1,2 +1,5 @@
 phoronix_results: '/var/lib/phoronix-test-suite/test-results'
+coremark_results_default: '/tmp/coremark'
 rem_stor_bench_results: '/home/{{ remote_host_user }}/fio-results'
+rem_net_bench_results: '/home/{{ remote_host_user }}/iperf3-results'
+rem_cpu_bench_results: '/home/{{ remote_host_user }}/coremark-results'
