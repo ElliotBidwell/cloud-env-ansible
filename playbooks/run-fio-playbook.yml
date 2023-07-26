@@ -109,10 +109,10 @@
           command: phoronix-test-suite benchmark fio
           responses:
             "Type:": "{{ test_type }}"
-            "Engine:": "1"
-            "Buffered:": "1"
-            "Direct:": "1"
-            "Block Size:": "1"
+            "Engine:": "{{ test_engine }}"
+            "Buffered:": "{{ test_buffer }}"
+            "Direct:": "{{ test_direct }}"
+            "Block Size:": "{{ test_block }}"
             "Disk Target:": "1"
             "Would you like to save these test results \\(Y\\/n\\):": "Y"
             "Enter a name for the result file:": "{{ test_filename }}"
@@ -131,8 +131,20 @@
         debug:
           var: fio_out
         become: true
-          
-  - name: Locate log files in remote file system and copy to results directory
+  
+  - name: Save results to new result log file in results directory
+    command: phoronix-test-suite result-file-to-text {{ test_filename }} > {{ rem_stor_bench_results }}/{{ test_filename }}.log
+    
+  - name: Save console printed results to registered variable
+    command: phoronix-test-suite result-file-to-text {{ test_filename }}
+    register: fio_result_out
+    
+  - name: Display Results
+    debug:
+      var: fio_result_out.stdout_lines
+    become: true
+  
+  - name: Locate run log files in remote file system and copy to results directory
     command: "find . -path './*/{{ test_filename }}.log' -exec cp {} {{ rem_stor_bench_results }}/{{ test_filename }}_{{ file_timestamp }}.log \\;"
     args:
       chdir: "{{ phoronix_results }}"
