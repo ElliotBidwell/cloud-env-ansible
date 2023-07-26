@@ -1,6 +1,6 @@
 ---
 - name: Execute Flexible I/O Storage Benchmark
-  hosts: ans-remote2
+  hosts: ans-remote0
   become: false
   
   vars_files:
@@ -83,8 +83,23 @@
     private: false
     
   - name: test_filename
-    prompt: Enter a name for the result file (do not include file extension)
+    prompt: Enter a name for the result file (do not include file extension or timestamp)
     private: false
+    
+  - name: test_name
+    prompt: Enter a unique name to describe this test run / configuration
+    private: false
+    
+  - name: test_desc
+    prompt: |
+      If desired, enter a new description below to better describe this result set / system configuration under test.
+      Press ENTER to proceed without changes.
+      
+      New Description
+    private: false
+  
+  vars:
+    file_timestamp: "{{ inventory_hostname }}_{{ ansible_date_time['date'] }}_{{ ansible_date_time['time'] }}"
   
   tasks:
   - name: Handle FIO Errors
@@ -99,8 +114,14 @@
             "Direct:": "1"
             "Block Size:": "1"
             "Disk Target:": "1"
-            "Would you like to save these test results \\(Y\\/n\\):": "n"
-          echo: true
+            "Would you like to save these test results \\(Y\\/n\\):": "Y"
+            "Enter a name for the result file:": "{{ test_filename }}"
+            "Enter a unique name to describe this test run / configuration:": "{{ test_name }}"
+            "New Description:": "{{ test_desc }}"
+            "Do you want to view the text results of the testing \\(Y\\/n\\):": "n"
+            "Would you like to upload the results to OpenBenchmarking.org \\(y\\/n\\):": "n"
+            
+          echo: false
           timeout: null
         register: fio_out
         become: true
@@ -112,13 +133,13 @@
         become: true
           
   - name: Locate log files in remote file system and copy to results directory
-    command: "find . -path './*/test-4.log' -exec cp {} {{ rem_stor_bench_results }}/test-4.log \\;"
+    command: "find . -path './*/{{ test_filename }}.log' -exec cp {} {{ rem_stor_bench_results }}/{{ test_filename }}_{{ file_timestamp }}.log \\;"
     args:
       chdir: "{{ phoronix_results }}"
   
   - name: Retrieve FIO Results Files
     fetch:
-      src: '{{ rem_stor_bench_results }}/test-4.log'
+      src: '{{ rem_stor_bench_results }}/{{ test_filename }}_{{ file_timestamp }}.log'
       dest: '{{ loc_stor_bench_results }}'
 
       

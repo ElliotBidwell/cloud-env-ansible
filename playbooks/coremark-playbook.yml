@@ -40,13 +40,30 @@
 
 - name: Execute CoreMark Benchmark
   hosts: proxmoxremote
-  gather_facts: false
+  gather_facts: true
   become_user: root
   
   vars_files:
     - ../vars/local_directories_vars.yml
+    - ../vars/remote_vars.yml
+    
+  vars:
+    file_timestamp: "{{ inventory_hostname }}_{{ ansible_date_time['date'] }}_{{ ansible_date_time['time'] }}"
+#    coremark_output_name: "coremark"
+    
+  vars_prompt:
 
+  - name: coremark_output_name
+    prompt: Enter a unique name for the output log file (Do not include file extension)
+    private: false
+    
   tasks:
+    - name: Create new coremark log directory on remote host
+      file:
+        path: "{{ rem_cpu_bench_results }}"
+        state: directory
+        mode: u+rw,g+rw,o+rw
+  
     - name: Run CoreMark
       command: /tmp/coremark/coremark.exe
       register: coremark_output
@@ -55,12 +72,22 @@
       debug:
         var: coremark_output.stdout_lines
         
+    - name: Locate performance log file in remote file system and copy to remote new results directory
+      command: "find . -path './run1.log' -exec cp {} {{ rem_cpu_bench_results }}/{{ coremark_output_name }}-performance_{{ file_timestamp }}.log \\;"
+      args:
+        chdir: "{{ coremark_results_default }}"
+       
+    - name: Locate performance log file in remote file system and copy to remote new results directory
+      command: "find . -path './run2.log' -exec cp {} {{ rem_cpu_bench_results }}/{{ coremark_output_name }}-validation_{{ file_timestamp }}.log \\;"
+      args:
+       chdir: "{{ coremark_results_default }}"
+        
     - name: Fetch CoreMark Performance Results
       fetch:
-        src: '/tmp/coremark/run1.log'
-        dest: '{{ loc_cpu_bench_results }}'
+        src: "{{ rem_cpu_bench_results }}/{{ coremark_output_name }}-performance_{{ file_timestamp }}.log"
+        dest: "{{ loc_cpu_bench_results }}"
 
     - name: Fetch CoreMark Validation Results
       fetch:
-        src: '/tmp/coremark/run2.log'
-        dest: '{{ loc_cpu_bench_results }}'
+        src: "{{ rem_cpu_bench_results }}/{{ coremark_output_name }}-validation_{{ file_timestamp }}.log"
+        dest: "{{ loc_cpu_bench_results }}"
