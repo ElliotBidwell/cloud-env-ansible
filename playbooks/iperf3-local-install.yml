@@ -1,15 +1,18 @@
 ---
+  # Play to install iperf3 on the controller so the server side of the test can be run locally
 - name: Install iperf3 Benchmark on Local Machine
   hosts: 127.0.0.1
   connection: local
   gather_facts: true
 
   tasks:
+      # Update Ubuntu apt cache
     - name: Update apt cache
       apt:
         update_cache: yes
       become: true
 
+      # Use apt module to install iperf3 
     - name: Install iperf3
       apt:
         name: iperf3
@@ -17,6 +20,7 @@
       become: true
       register: apt_output
 
+  # Use handler to display output of apt update. Do further research on how this works.
   handlers:
     - name: Display apt output
       debug:
