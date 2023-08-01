@@ -71,8 +71,9 @@ sudo service ssh start
 ```
 To stop or restart the server, replace `start` with `stop` or `restart`, respectively.
 
-### Step 4: Adding the Remote Hosts' IP Addresses to Your List of Known SSH Hosts
-Another step to making the remote hosts accessible to the controller is to add their hostnames and IP addresses to your Ubuntu Hosts file.
+### Step 4: Adding the Remote Hosts' IP Addresses and Hostnames to SSH Hosts File and Adding SSH Fingerprints
+Another step to making the remote hosts accessible to the controller is to add their hostnames and IP addresses to your Ubuntu hosts file,
+and adding each remote host to your list of known hosts.
 
 **1.** The hosts file is located at `/etc/hosts`. It can be accessed for editing via the following command.
 ```r
@@ -87,6 +88,19 @@ the formatting and spacing consistent with each item in the list.
 <1st-host-ip>   <1st-hostname>
 <2nd-host-ip>   <2nd-hostname>
 and so on...
+```
+Next, you'll need to add each host's to your list of known hosts.
+**3.** Connect manually to each remote host using the following command.
+```r
+ssh <remote-user>@<remote-hostname>
+```
+Answer yes when it asks if you would like to continue connecting. It will then ask for the password corresponding to `<remote-user>`.
+This process adds the ssh fingerprint to the `~/.ssh/known_hosts` file, making it possible for Ansible to connect via SSH as it cannot
+perform Host Key checking.
+
+### Step 5: Installing the Suite Using Ansible Plays
+**1.**
+```r
 ```
 
 ## Important Commands
