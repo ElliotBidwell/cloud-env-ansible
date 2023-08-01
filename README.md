@@ -8,8 +8,27 @@ A list of useful resources and documentation to help you learn Ansible, Python s
 * [Using Ansible playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/index.html)
 - [Ansible command line tools](https://docs.ansible.com/ansible/latest/command_guide/index.html)
 
+## Installing the Automated Benchmark Suite
 
-## Ansible Installation
+### Step 1: Installing Git and Cloning the Repository
+You'll need to clone this repository on the machine you've chosen to be the Ansible controller. To do this you need to have git installed. 
+
+**1.** If you haven't already, update your Ubuntu.
+```r
+sudo apt update
+```
+**2.** Install git through the command line
+```r
+sudo apt-get install git-all
+```
+**3.** Clone this repository.
+```r
+git clone https://github.com/ElliotBidwell/cloud-env-ansible.git
+```
+
+### Step 2: Ansible Installation
+Next, you'll need Ansible installed on the controller.
+
 **1.** If you haven't already, update your Ubuntu.
 ```r
 sudo apt update
@@ -31,29 +50,36 @@ sudo apt install ansible
 ansible --version
 ```
 
-## Starting SSH Server on Remote Machines
-For the remote machines to be accessible, the need to be open to SSH connections. One way to do this is with an OpenSSH server.
+### Step 3: Starting SSH Server on Remote Machines
+For the remote machines to be accessible, they need to be open to SSH connections. One way to do this is with an OpenSSH server.
 
 **1.** It usually doesn't hurt to update Ubuntu first.
 ```r
 sudo apt update
 ```
-
 **2.** Another very helpful package is net-tools, which allows you to easily access local IP related info.
 ```r
 sudo apt install net-tools
 ```
-
 **3.** Install the OpenSSH server package.
 ```r
 sudo apt install openssh-server
 ```
-
 **4.** Start up the SSH server.
 ```r
 sudo service ssh start
 ```
 To stop or restart the server, replace `start` with `stop` or `restart`, respectively.
+
+### Step 4: Adding the Remote Hosts' IP Addresses to Your List of Known SSH Hosts
+Another step to making the remote hosts accessible to the controller is to add their hostnames and IP addresses to your Ubuntu Hosts file.
+
+**1.** The hosts file is located at `/etc/hosts`. It can be accessed for editing via the following command.
+```r
+sudo nano /etc/hosts
+```
+**2.** At the top of the file you will see a 2-column list of IP addresses next to their corresponding hostnames. Add the IPs and hostnames of each of your
+remote host machines.
 
 ## Important Commands
 ### Commonly Used Commands
