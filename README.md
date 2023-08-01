@@ -78,8 +78,13 @@ Another step to making the remote hosts accessible to the controller is to add t
 ```r
 sudo nano /etc/hosts
 ```
-**2.** At the top of the file you will see a 2-column list of IP addresses next to their corresponding hostnames. Add the IPs and hostnames of each of your
-remote host machines.
+**2.** At the top of the file you will see a 2-column list of IP addresses next to their corresponding hostnames as shown below. 
+Add the IPs and hostnames of each of your remote host machines where `<host-ip>` and `<hostname>` are shown.
+```
+127.0.0.1	localhost
+127.0.1.1	ansible-primary
+<host-ip>       <hostname>
+```
 
 ## Important Commands
 ### Commonly Used Commands
