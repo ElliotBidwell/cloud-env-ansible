@@ -6,7 +6,7 @@ A list of useful resources and documentation to help you learn Ansible, Python s
 +
 * [Detailed YAML syntax documentation](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html#)
 * [Using Ansible playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/index.html)
-- [Ansible command line tools](https://docs.ansible.com/ansible/latest/command_guide/index.html)
+* [Ansible command line tools](https://docs.ansible.com/ansible/latest/command_guide/index.html)
 
 ## Installing the Automated Benchmark Suite
 
@@ -79,11 +79,14 @@ Another step to making the remote hosts accessible to the controller is to add t
 sudo nano /etc/hosts
 ```
 **2.** At the top of the file you will see a 2-column list of IP addresses next to their corresponding hostnames as shown below. 
-Add the IPs and hostnames of each of your remote host machines where `<host-ip>` and `<hostname>` are shown.
+Add the IPs and hostnames of each of your remote host machines where `<host-ip>` and `<hostname>` are shown. Take care to make
+the formatting and spacing consistent with each item in the list.
 ```
-127.0.0.1	localhost
-127.0.1.1	ansible-primary
-<host-ip>       <hostname>
+127.0.0.1       localhost
+127.0.1.1       ansible-primary
+<1st-host-ip>   <1st-hostname>
+<2nd-host-ip>   <2nd-hostname>
+and so on...
 ```
 
 ## Important Commands
