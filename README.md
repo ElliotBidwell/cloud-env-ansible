@@ -87,7 +87,8 @@ the formatting and spacing consistent with each item in the list.
 127.0.1.1       ansible-primary
 <1st-host-ip>   <1st-hostname>
 <2nd-host-ip>   <2nd-hostname>
-and so on...
+<...>           <...>
+<nth-host-ip>   <nth-hostname>
 ```
 Next, you'll need to add each host's to your list of known hosts.
 **3.** Connect manually to each remote host using the following command.
