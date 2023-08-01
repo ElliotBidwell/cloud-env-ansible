@@ -1,6 +1,6 @@
 ---
 - name: Install Phoronix Test Suite and RAMspeed SMP on Ubuntu Desktop
-  hosts: ans-remote2
+  hosts: proxmoxremote
   become: true
   tasks:
     - name: Update apt cache
