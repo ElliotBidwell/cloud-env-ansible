@@ -1,28 +1,17 @@
-# Group for ProxMox VM host names
+# Group for all ProxMox VM hosts including controller
 [proxmoxbench]
 ans-remote0
 ans-remote1
 ans-remote2
-# ans-remote3
 127.0.0.1
 
+# Group all remote Proxmox VMs
 [proxmoxremote]
 ans-remote0
 ans-remote1
 ans-remote2
-# ans-remote3
 
+# Group for only the local controller
 [proxmoxlocal]
 127.0.0.1
-
-# Group for Elliot's local VMware machines
-[localVMsElliot]
-ElliotUbuntuVM
-ElliotUbuntuVM2
-
-# Group for Dan's local VMs
-[localVMsDan]
-
-# Group for Amy's local VMs
-[localVMsAmy]
 
