@@ -99,7 +99,52 @@ This process adds the ssh fingerprint to the `~/.ssh/known_hosts` file, making i
 perform Host Key checking.
 
 ### Step 5: Adding Hostnames to Ansible Inventory File
-**1.**
+The final step in making the remote hosts accessible by proxmox is to add the hostnames of each remote host to the Ansible inventory file.
+
+The file is located at `cloud-env-ansible/inventory/hosts`. You'll need to edit several sections.
+
+**1.** Replace the existing hostnames under `[proxmoxbench]` with your own, excluding the localhost IP `127.0.0.1`, which should 
+be left as-is.
+```
+# Group for all ProxMox VM hosts including controller
+[proxmoxbench]
+ans-remote0
+ans-remote1
+ans-remote2
+127.0.0.1
+```
+**2.** Replace the existing hostnames under `[proxmoxbench]` with your own.
+```
+# Group all remote Proxmox VMs
+[proxmoxremote]
+ans-remote0
+ans-remote1
+ans-remote2
+```
+When you are finished, you should have a file that looks something like this, where each hostname in `< >` is replaced by one of
+your own.
+```
+# Group for all ProxMox VM hosts including controller
+[proxmoxbench]
+<1st-hostname>
+<2nd-hostname>
+<3rd-hostname>
+<...>
+<nth-hostname>
+127.0.0.1
+
+# Group all remote Proxmox VMs
+[proxmoxremote]
+<1st-hostname>
+<2nd-hostname>
+<3rd-hostname>
+<...>
+<nth-hostname>
+
+# Group for only the local controller
+[proxmoxlocal]
+127.0.0.1
+```
 
 ### Step 6: Installing the Suite Using Ansible Plays
 **1.** Install the CoreMark CPU benchmark on the remote machines.
