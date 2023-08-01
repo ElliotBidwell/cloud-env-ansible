@@ -1,0 +1,19 @@
+---
+  # Installed on remote hosts so hosts can connect to controller as clients during iperf3 run
+- name: Install iperf3 Benchmark on Ubuntu Remote Machines
+  hosts: proxmoxremote
+  gather_facts: true
+
+  tasks:
+      # Update apt packages
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: true
+
+      # Use apt module to install iperf3
+    - name: Install iperf3
+      apt:
+        name: iperf3
+        state: present
+      become: true

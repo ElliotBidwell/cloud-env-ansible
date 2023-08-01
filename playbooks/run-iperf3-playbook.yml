@@ -1,0 +1,109 @@
+---
+  # Play is run against localhost (the controller)
+- name: Start iperf3 Benchmark Server
+  hosts: proxmoxlocal
+  # Specify that the ssh connection is local
+  connection: local
+  gather_facts: true
+  become: yes
+
+  # Include var files for local and remote file directory paths
+  vars_files:
+    - ../vars/local_directories_vars.yml
+    - ../vars/remote_vars.yml
+
+  vars:
+    # String to contain the "-server" tag, hostname, date, and timestamp, is appeneded to the end of the log file name
+    file_timestamp: "-server-{{ inventory_hostname }}_{{ ansible_date_time['date'] }}_{{ ansible_date_time['time'] }}"
+
+  vars_prompt:
+
+    # Prompt the user for the name of the server-side log file
+  - name: server_output_name
+    prompt: "Enter a unique name for the server-side log file (Do not include file extension, \"-server\", hostname, and timestamp are automatically appended)"
+    private: false
+
+  tasks:
+      
+      # Creates directory on controller to store bothe server and client-side logs
+    - name: Create new iperf3 log directory on local host
+      file:
+        path: "{{ loc_net_bench_results }}"
+        state: directory
+        # Note: Maybe change permissions to be more secure
+        mode: u+rw,g+rw,o+rw
+      
+      # Start server on controller
+    - name: Start server from local command line
+      # Uses '--logfile' option to print results to new log file in local results directory
+      command: "iperf3 -s -F /var/log/iperf3/output.txt --logfile {{ loc_net_bench_results }}/{{ server_output_name }}{{ file_timestamp }}.log"
+      # This task is run asynchronously, allowing subsequent plays and tasks to run before this one completes. This is
+      # necessary because this task runs the iperf3 server indefinitely, and the command to do so doesn't finish executing until  
+      # the server process is killed. This causes the task itself to continue running, preventing the subsequent tasks which
+      # perform the client-side connections from running if it is not run asynchronously.
+      async: 3600
+      poll: 0
+  
+  # Performs iperf3 client connections on remote hosts
+- name: Execute iperf3 Benchmark Client Connections
+  hosts: proxmoxremote
+  # This play is set to execute on a single remote host at a time, as opposed to the default of all simultaneously, using the 
+  # serial keyword. This is done because running the iperf3 server is implemented to handle only one client connection at a time.
+  serial: 1
+  gather_facts: true
+  become: yes
+  
+  vars_files:
+    - ../vars/local_directories_vars.yml
+    - ../vars/remote_vars.yml
+
+  vars:
+    # String to contain the "-client" tag, hostname, date, and timestamp, is appeneded to the end of the log file name
+    file_timestamp: "-client-{{ inventory_hostname }}_{{ ansible_date_time['date'] }}_{{ ansible_date_time['time'] }}"
+
+  vars_prompt:
+
+    # Prompt the user for the name of the client-side log file
+  - name: client_output_name
+    prompt: "Enter a unique name for the client-side log file (Do not include file extension, \"-client\", hostname, and timestamp are automatically appended)"
+    private: false
+  
+  tasks:
+      # Create new directory to store logs on remote machine. Controller will fetch logs from this directory to its own local
+      # folder
+    - name: Create new iperf3 log directory on remote host
+      file:
+        path: "{{ rem_net_bench_results }}"
+        state: directory
+        # Note: Maybe change perms to be more secure
+        mode: u+rw,g+rw,o+rw
+
+      # Run iperf3 client on remote hosts
+    - name: Connect iperf3 clients from command line
+      # "--logfile" option used in command to print results to a new log in remote hosts results directory 
+      command: "iperf3 -c {{ local_ip }} -t 10 --logfile {{ rem_net_bench_results }}/{{ client_output_name }}{{ file_timestamp }}.log"
+      register: iperf_client_output
+
+      # Display results through stdout on controller
+    - name: Displaying iperf3 client-end results
+      debug:
+        var: iperf_client_output.stdout_lines
+      
+      # Use fetchs module to copy newly created client-side log files from remote host to controller
+    - name: Retrieve client log files from remote hosts
+      fetch:
+        src: "{{ rem_net_bench_results }}/{{ client_output_name }}{{ file_timestamp }}.log"
+        dest: "{{ loc_net_bench_results }}"
+        
+  # This final play runs with a local connection and with localhost as the target
+- name: Stop iperf3 Benchmark Server
+  hosts: proxmoxlocal
+  connection: local
+  gather_facts: true
+  become: yes
+  
+  tasks:
+      # Kill iperf3 server process with command module 
+    - name: Run killall command on iperf3 server
+      command: killall iperf3
+

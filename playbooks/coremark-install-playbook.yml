@@ -1,0 +1,45 @@
+---
+- name: Install CoreMark Benchmark on Ubuntu
+  hosts: proxmoxremote
+  gather_facts: true
+  become_user: root
+
+  # Include the var file containing local directory paths
+  vars_files:
+    - ../vars/local_directories_vars.yml
+
+  tasks:
+      # Update Ubuntu apt cache
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: true
+
+      #Install git and buil-essential which includes make
+    - name: Install dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      become: true
+      with_items:
+        - build-essential
+        - git
+      register: apt_output
+
+      # Use git module to clone the coremark repo from github
+    - name: Clone CoreMark repository
+      git:
+        repo: https://github.com/eembc/coremark.git
+        dest: /tmp/coremark
+      become: true
+
+      # Use command module to compile coremark using make
+    - name: Compile CoreMark
+      command: make -C /tmp/coremark
+      become: true
+
+  # Use handler to display output of apt update. Do further research on how this works.
+  handlers:
+    - name: Display apt output
+      debug:
+        var: apt_output.stdout_lines

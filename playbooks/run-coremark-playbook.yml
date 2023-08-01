@@ -1,0 +1,71 @@
+  # Start of new play that runs coremark
+- name: Execute CoreMark Benchmark
+  hosts: proxmoxremote
+  gather_facts: true
+  become_user: root
+
+  # Include var files containing local and remote file paths
+  vars_files:
+    - ../vars/local_directories_vars.yml
+    - ../vars/remote_vars.yml
+
+  # Declare/initialize variables
+  vars:
+    # String containing name of current remote host, current date, and timestamp. Appended to end of log file names.
+    file_timestamp: "{{ inventory_hostname }}_{{ ansible_date_time['date'] }}_{{ ansible_date_time['time'] }}"
+#    coremark_output_name: "coremark"
+
+  # Prompt user to enter variable values  
+  vars_prompt:
+
+    # Prompt for name prefix of coremark output logs
+  - name: coremark_output_name
+    prompt: Enter a unique name for the output log file (Do not include file extension)
+    private: false
+    
+  tasks:
+      # Create a new directory on each remote host to which each coremark output log will be copied with it's new name
+      # Gives universal full perms, may need to be changed for more secure access rules
+    - name: Create new coremark log directory on remote host
+      file:
+        path: "{{ rem_cpu_bench_results }}"
+        state: directory
+        mode: u+rw,g+rw,o+rw
+
+      # Run coremark using the command module. This produces output log files in /tmp/coremark with default names
+      # Stores stdout from coremark on the remote host in a variable coremark_output
+    - name: Run CoreMark
+      command: /tmp/coremark/coremark.exe
+      register: coremark_output
+
+      # Display content of coremark_output to stdout on local controller
+    - name: Display CoreMark output
+      debug:
+        var: coremark_output.stdout_lines
+
+      # Use command module to run a find command to search for coremark performance output logs in /tmp/coremark.
+      # The find command runs cp on each file that is found and copies them to new results directory created
+      # earlier, renaming them with the value of the file name variable and appending the hostname, date, and
+      # timestamp to the end.
+    - name: Locate performance log file in remote file system and copy to remote new results directory
+      command: "find . -path './run1.log' -exec cp {} {{ rem_cpu_bench_results }}/{{ coremark_output_name }}-performance_{{ file_timestamp }}.log \\;"
+      args:
+        chdir: "{{ coremark_results_default }}"
+
+      # Do the same actions as the previous task, but with the validation output logs instead.
+    - name: Locate performance log file in remote file system and copy to remote new results directory
+      command: "find . -path './run2.log' -exec cp {} {{ rem_cpu_bench_results }}/{{ coremark_output_name }}-validation_{{ file_timestamp }}.log \\;"
+      args:
+       chdir: "{{ coremark_results_default }}"
+
+      # Use fetch module to copy full remote directory to the newly named performance output logs to the local controller
+    - name: Fetch CoreMark Performance Results
+      fetch:
+        src: "{{ rem_cpu_bench_results }}/{{ coremark_output_name }}-performance_{{ file_timestamp }}.log"
+        dest: "{{ loc_cpu_bench_results }}"
+
+      # Do the same action as the previous task, but with the validation output logs instead.   
+    - name: Fetch CoreMark Validation Results
+      fetch:
+        src: "{{ rem_cpu_bench_results }}/{{ coremark_output_name }}-validation_{{ file_timestamp }}.log"
+        dest: "{{ loc_cpu_bench_results }}"
