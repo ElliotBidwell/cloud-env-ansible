@@ -98,9 +98,25 @@ Answer yes when it asks if you would like to continue connecting. It will then a
 This process adds the ssh fingerprint to the `~/.ssh/known_hosts` file, making it possible for Ansible to connect via SSH as it cannot
 perform Host Key checking.
 
-### Step 5: Installing the Suite Using Ansible Plays
+### Step 5: Adding Hostnames to Ansible Inventory File
 **1.**
+
+### Step 6: Installing the Suite Using Ansible Plays
+**1.** Install the CoreMark CPU benchmark on the remote machines.
 ```r
+ansible-playbook ./playbooks/coremark-install-playbook.yml -i ./inventory/hosts --user <remote-host-user --ask-pass --ask-become-pass
+```
+**2.** Install the iperf3 network benchmark on the controller machine.
+```r
+ansible-playbook ./playbooks/iperf3-local-install-playbook.yml -i ./inventory/hosts --user <remote-host-user --ask-pass --ask-become-pass
+```
+**3.** Install the iperf3 network benchmark on the remote machines.
+```r
+ansible-playbook ./playbooks/iperf3-remote-install-playbook.yml -i ./inventory/hosts --user <remote-host-user --ask-pass --ask-become-pass
+```
+**4.** Install Flexible I/O storage benchmark and RAMspeed memory benchmark included in Phoronix on remote machines.
+```r
+ansible-playbook ./playbooks/phoronix-install-playbook.yml -i ./inventory/hosts --user <remote-host-user --ask-pass --ask-become-pass
 ```
 
 ## Important Commands
