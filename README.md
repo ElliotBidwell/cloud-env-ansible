@@ -49,6 +49,8 @@ sudo apt install ansible
 ```r
 ansible --version
 ```
+You will need python to be at version 3.5 or later to Ansible to work properly. The latest version of Ubuntu Desktop should
+come with it preinstalled
 
 ### Step 3: Starting SSH Server on Remote Machines
 For the remote machines to be accessible, they need to be open to SSH connections. One way to do this is with an OpenSSH server.
@@ -150,21 +152,31 @@ your own.
 ### Step 6: Installing the Suite Using Ansible Plays
 **1.** Install the CoreMark CPU benchmark on the remote machines.
 ```r
-ansible-playbook ./playbooks/coremark-install-playbook.yml -i ./inventory/hosts --user <remote-host-user --ask-pass --ask-become-pass
+ansible-playbook ./playbooks/coremark-install-playbook.yml -i ./inventory/hosts --user <remote-host-user> --ask-pass --ask-become-pass
 ```
 **2.** Install the iperf3 network benchmark on the controller machine.
 ```r
-ansible-playbook ./playbooks/iperf3-local-install-playbook.yml -i ./inventory/hosts --user <remote-host-user --ask-pass --ask-become-pass
+ansible-playbook ./playbooks/iperf3-local-install-playbook.yml -i ./inventory/hosts --user <remote-host-user> --ask-pass --ask-become-pass
 ```
 **3.** Install the iperf3 network benchmark on the remote machines.
 ```r
-ansible-playbook ./playbooks/iperf3-remote-install-playbook.yml -i ./inventory/hosts --user <remote-host-user --ask-pass --ask-become-pass
+ansible-playbook ./playbooks/iperf3-remote-install-playbook.yml -i ./inventory/hosts --user <remote-host-user> --ask-pass --ask-become-pass
 ```
 **4.** Install Flexible I/O storage benchmark and RAMspeed memory benchmark included in Phoronix on remote machines.
 ```r
 ansible-playbook ./playbooks/phoronix-install-playbook.yml -i ./inventory/hosts --user <remote-host-user --ask-pass --ask-become-pass
 ```
 
+## Running the Benchmarks
+
+To run the benchmarks, use this command to run their corresponding playbooks.
+```r
+ansible-playbook <playbook file path> -i <inventory file path> --user <remote host username> --ask-pass --ask-become-pass
+```
+Existing benchmark playbooks. Each are located in `<path-to-repo>/playbooks` 
++ `run-coremark-playbook.yml`
+* `run-iperf3-playbook.yml`
+* `
 ## Important Commands
 ### Commonly Used Commands
 Use to ping each host in an inventory/group.
@@ -174,15 +186,6 @@ ansible -i <inventory file path> <inventory group> -m ping --user <remote host u
 Use to run a playbook on each host in an inventory/group. `-e <inventory group>` designates a group of hosts within the inventory to run the playbook on.
 ```r
 ansible-playbook <playbook file path> -i <inventory file path> -e <inventory group> --user <remote host username> --ask-pass --ask-become-pass
-```
-### Commands Used to Run Benchmarks
-To install and run the CoreMark CPU benchmark.
-```r
-ansible-playbook ./playbooks/coremark-playbook.yml -i ./inventory/hosts --user ansadmin --ask-pass --ask-become-pass
-```
-To install and run the iperf3 network speed benchmark.
-```r
-ansible-playbook ./playbooks/iperf3-playbook.yml -i ./inventory/hosts --user ansadmin --ask-pass --ask-become-pass
 ```
 
 ### Arguments/Options Used Above
