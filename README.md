@@ -3,7 +3,6 @@ A repo for all files related to using Ansible to automate VM benchmarking in our
 
 ## Important Resources
 A list of useful resources and documentation to help you learn Ansible, Python scripting, etc.
-+
 * [Detailed YAML syntax documentation](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html#)
 * [Using Ansible playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/index.html)
 * [Ansible command line tools](https://docs.ansible.com/ansible/latest/command_guide/index.html)
@@ -167,29 +166,56 @@ ansible-playbook ./playbooks/iperf3-remote-install-playbook.yml -i ./inventory/h
 ansible-playbook ./playbooks/phoronix-install-playbook.yml -i ./inventory/hosts --user <remote-host-user --ask-pass --ask-become-pass
 ```
 
-## Running the Benchmarks
+# Running the Benchmarks
 
 To run the benchmarks, use this command to run their corresponding playbooks.
 ```r
 ansible-playbook <playbook file path> -i <inventory file path> --user <remote host username> --ask-pass --ask-become-pass
 ```
 Existing benchmark playbooks. Each are located in `<path-to-repo>/playbooks` 
-+ `run-coremark-playbook.yml`
-* `run-iperf3-playbook.yml`
-* `
-## Important Commands
-### Commonly Used Commands
+* `run-coremark-playbook.yml` for CPU test. Results stored in `/home/<user>/coremark-results` on controller.
+* `run-iperf3-playbook.yml` for network test. Results stored in `/home/<user>/iperf-results` on controller.
+* `run-fio-playbook.yml` for storage I/O test. Results stored in `/home/<user>/stor-results` on controller.
+
+# Other Useful Commands
 Use to ping each host in an inventory/group.
 ```r
 ansible -i <inventory file path> <inventory group> -m ping --user <remote host username> --ask-pass
 ```
-Use to run a playbook on each host in an inventory/group. `-e <inventory group>` designates a group of hosts within the inventory to run the playbook on.
-```r
-ansible-playbook <playbook file path> -i <inventory file path> -e <inventory group> --user <remote host username> --ask-pass --ask-become-pass
-```
 
-### Arguments/Options Used Above
-- `--ask-pass` causes a prompt for the remote host user's password.
+# Useful Command Arguments/Options
+* `--ask-pass` causes a prompt for the remote host user's password.
 * `--ask-become-pass` causes a prompt for the remote host's root password.
 * `-m ping` uses the ping module to test the ssh connection with each host.
-+ `--start-at-task="<task name>"` runs a play or playbook starting at a designated task `<task name>`. Useful for debugging.
+* `--start-at-task="<task name>"` runs a play or playbook starting at a designated task `<task name>`. Useful for debugging.
+
+# Implementation
+Installation of the benchmarks on remote machines is accomplished with a single playbook for each test. These plays handle the installation of any depenencies including apt packages, pip packages, and repositories as well as the benchmark softwares themselves. Execution and the retrieval of benchmark results are done with another set of playbooks, which store the results in several designated directories on the controller.
+
+## Coremark - CPU
+### Installation
+Handled by `coremark-install-playbook.yml`
+*  Local directory to store results `/home/<user>/coremark-results` is created with the `file` module. 
+* `build-essential` and `git` packages are installed via the `apt` module.
+* [CoreMark github repo](https://github.com/eembc/coremark.git) is cloned into `/tmp`
+* Coremark is compiled by running `make`, which is included in `build-essentials`, on the repo using the command module.
+
+### Running
+* User is prompted to name the result files of the new test.
+* Remote results directory is created at `/home/<user>/coremark-results` on remote machine.
+* Coremark is run by executing `/tmp/coremark/coremark.exe` with `command` module.
+* `find` command is executed to search for each of the two resulting files located in their default locations, executing `cp` on each and copying them to the newly created remote directory with new names including appended hostnames, dates, and timestamps.
+* New result files are fetched from the remote to the local result directory using the `fetch` module.
+
+## Iperf3 - Network
+### Installation
+Iperf3 must be installed on both the remotes and the controller so that the controller can host the iperf3 server while the remotes connect as
+clients. The local install is handled by `iperf3-local-install-playbook.yml` while the remote install is handled by `iperf3-remote-install-playbook.yml`
+*  `iperf3` package is installed with apt module.
+*  For the local playbook, local directory to store results `/home/<user>/coremark-results` is created with the file module.
+
+### Running
+
+
+## Flexible I/O - Storage I/O
+
