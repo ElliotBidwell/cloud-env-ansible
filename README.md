@@ -195,27 +195,49 @@ Installation of the benchmarks on remote machines is accomplished with a single 
 ## Coremark - CPU
 ### Installation
 Handled by `coremark-install-playbook.yml`
-*  Local directory to store results `/home/<user>/coremark-results` is created with the `file` module. 
-* `build-essential` and `git` packages are installed via the `apt` module.
-* [CoreMark github repo](https://github.com/eembc/coremark.git) is cloned into `/tmp`
-* Coremark is compiled by running `make`, which is included in `build-essentials`, on the repo using the command module.
+
+**1.**  Local directory to store results `/home/<user>/coremark-results` is created with the `file` module.
+
+**2.** `build-essential` and `git` packages are installed via the `apt` module.
+
+**3.** [CoreMark github repo](https://github.com/eembc/coremark.git) is cloned into `/tmp`
+
+**4.** Coremark is compiled by running `make`, which is included in `build-essentials`, on the repo using the command module.
+
 
 ### Running
-* User is prompted to name the result files of the new test.
-* Remote results directory is created at `/home/<user>/coremark-results` on remote machine.
-* Coremark is run by executing `/tmp/coremark/coremark.exe` with `command` module.
-* `find` command is executed to search for each of the two resulting files located in their default locations, executing `cp` on each and copying them to the newly created remote directory with new names including appended hostnames, dates, and timestamps.
-* New result files are fetched from the remote to the local result directory using the `fetch` module.
+Handled by `run-coremark-playbook.yml`
+
+**1.** User is prompted to name the result files of the new test.
+
+**2.** Remote results directory is created at `/home/<user>/coremark-results` on remote machine.
+
+**3.** Coremark is run by executing `/tmp/coremark/coremark.exe` with `command` module.
+
+**4.** `find` command is executed to search for each of the two resulting files located in their default locations, executing `cp` on each and copying them to the newly created remote directory with new names including appended hostnames, dates, and timestamps.
+
+**5.** New result files are fetched from the remote to the local result directory using the `fetch` module.
 
 ## Iperf3 - Network
 ### Installation
 Iperf3 must be installed on both the remotes and the controller so that the controller can host the iperf3 server while the remotes connect as
 clients. The local install is handled by `iperf3-local-install-playbook.yml` while the remote install is handled by `iperf3-remote-install-playbook.yml`
-*  `iperf3` package is installed with apt module.
-*  For the local playbook, local directory to store results `/home/<user>/coremark-results` is created with the file module.
+
+**1.**  `iperf3` package is installed with apt module.
+
+**2.**  Local directory `/home/<user>/iperf-results` and remote directory `/home/<user>/iperf3-results` are created with the file module.
+
 
 ### Running
+This is done with three different plays within the same playbook, so as to allow separate sets of remote machines to be targeted by separate sets of tasks.
 
+**1.** The first play runs locally on the controller machine. It includes a single task to run a command `that starts the iperf3 server`. This task is run asynchronously, allowing the subsequent tasks/plays to begin while this one continues. This is necessary because the command to run the server continues indefinitely, and thus the task does as well, which would would prevent the tasks that handle the client-side iperf connections from runnning if were not run asynchronously.
+
+**2.** The next play is run on the remote machines. It's first task runs the iperf3 client connection using the `command` module, using the `--logfile` optionfor iperf3 to pipe the results into a log file in `/home/<user>/iperf3-results`. Then, the results are fetched from that directory to `/home/<user>/iperf-results` on the controller. This play is serialized so that it runs for a single remote host at a time, as the iperf3 server can only handle a single client at a time.
+
+**3.** The last play simply runs locally on the controller and executes `killall iperf3` to stop the server and end the playbook.
 
 ## Flexible I/O - Storage I/O
+### Installation
 
+### Running
