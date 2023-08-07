@@ -4,6 +4,10 @@
   hosts: proxmoxremote
   gather_facts: true
 
+  vars_files:
+    - ../vars/local_directories_vars.yml
+    - ../vars/remote_vars.yml
+
   tasks:
       # Update apt packages
     - name: Update apt cache
@@ -17,3 +21,12 @@
         name: iperf3
         state: present
       become: true
+      
+      # Create new directory to store logs on remote machine. Controller will fetch logs from this directory to its own local
+      # folder
+    - name: Create new iperf3 log directory on remote host
+      file:
+        path: "{{ rem_net_bench_results }}"
+        state: directory
+        # Note: Maybe change perms to be more secure
+        mode: u+rw,g+rw,o+r
