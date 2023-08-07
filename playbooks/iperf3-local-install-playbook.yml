@@ -23,6 +23,7 @@
       become: true
       register: apt_output
       
+      # Create new directory on controller to store server-side results and client-side results fetched remotely.
     - name: Create local results directory
       file:
         path: "{{ loc_net_bench_results }}"
