@@ -66,12 +66,6 @@
     - name: Connect iperf3 clients from command line
       # "--logfile" option used in command to print results to a new log in remote hosts results directory 
       command: "iperf3 -c {{ local_ip }} -t 10 --logfile {{ rem_net_bench_results }}/{{ client_output_name }}{{ file_timestamp }}.log"
-#      register: iperf_client_output
-
-      # Display results through stdout on controller
-#    - name: Displaying iperf3 client-end results
-#      debug:
-#        var: iperf_client_output.stdout_lines
       
       # Use fetchs module to copy newly created client-side log files from remote host to controller
     - name: Retrieve client log files from remote hosts
