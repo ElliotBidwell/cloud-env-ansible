@@ -25,14 +25,6 @@
 
   tasks:
       
-      # Creates directory on controller to store bothe server and client-side logs
-    - name: Create new iperf3 log directory on local host
-      file:
-        path: "{{ loc_net_bench_results }}"
-        state: directory
-        # Note: Maybe change permissions to be more secure
-        mode: u+rw,g+rw,o+rw
-      
       # Start server on controller
     - name: Start server from local command line
       # Uses '--logfile' option to print results to new log file in local results directory
@@ -69,25 +61,17 @@
     private: false
   
   tasks:
-      # Create new directory to store logs on remote machine. Controller will fetch logs from this directory to its own local
-      # folder
-    - name: Create new iperf3 log directory on remote host
-      file:
-        path: "{{ rem_net_bench_results }}"
-        state: directory
-        # Note: Maybe change perms to be more secure
-        mode: u+rw,g+rw,o+rw
 
       # Run iperf3 client on remote hosts
     - name: Connect iperf3 clients from command line
       # "--logfile" option used in command to print results to a new log in remote hosts results directory 
       command: "iperf3 -c {{ local_ip }} -t 10 --logfile {{ rem_net_bench_results }}/{{ client_output_name }}{{ file_timestamp }}.log"
-      register: iperf_client_output
+#      register: iperf_client_output
 
       # Display results through stdout on controller
-    - name: Displaying iperf3 client-end results
-      debug:
-        var: iperf_client_output.stdout_lines
+#    - name: Displaying iperf3 client-end results
+#      debug:
+#        var: iperf_client_output.stdout_lines
       
       # Use fetchs module to copy newly created client-side log files from remote host to controller
     - name: Retrieve client log files from remote hosts
