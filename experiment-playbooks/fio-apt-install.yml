@@ -1,0 +1,28 @@
+---
+- name: Install Flexible I/O benchmark software
+  hosts: ans-remote4
+  become: yes
+
+  vars_files:
+    - ../vars/local_directories_vars.yml
+    - ../vars/remote_vars.yml
+
+  tasks:
+   - name: Update apt cache
+     apt:
+       update_cache: yes
+
+   - name: install FIO with APT
+     apt:
+       name: fio
+       state: present
+        
+   - name: Run FIO
+     command: fio aio-read.fio
+     args:
+       chdir: /home/ansadmin
+     register: apt_fio_out
+      
+   - name: Display results
+     debug:
+       var: apt_fio_out.stdout_lines

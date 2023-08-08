@@ -1,0 +1,14 @@
+---
+- name: Execute pts/disk disk test suite Storage Benchmark
+  hosts: ans-remote4
+  become: true
+  
+  vars_files:
+    - ../vars/local_directories_vars.yml
+    - ../vars/remote_vars.yml
+  
+  vars_prompt:
+  
+  - name: test_type
+    prompt: 
+    private: false
