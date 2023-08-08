@@ -1,6 +1,6 @@
 ---
 - name: Install Flexible I/O benchmark software
-  hosts: your_target_group
+  hosts: ans-remote4
   become: yes  # This will execute tasks with sudo privileges
 
   tasks:
