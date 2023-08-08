@@ -1,0 +1,33 @@
+---
+- name: Install Flexible I/O benchmark software
+  hosts: your_target_group
+  become: yes  # This will execute tasks with sudo privileges
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name: ['git', 'build-essential']
+        state: present
+
+    - name: Clone Flexible I/O repository
+      git:
+        repo: https://github.com/axboe/fio.git
+        dest: /opt/fio
+        version: master
+
+    - name: Build and install Flexible I/O
+      command: make
+      args:
+        chdir: /opt/fio
+
+    # Add more tasks here if you need to configure the benchmark further
+
+  handlers:
+    - name: Restart services if required
+      service:
+        name: your_service_name
+        state: restarted
