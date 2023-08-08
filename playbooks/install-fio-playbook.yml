@@ -1,0 +1,33 @@
+---
+- name: Install Flexible I/O benchmark software
+  hosts: ans-remote4
+  become: true
+  tasks:
+    - name: Install required packages
+      apt:
+        name: ['git', 'build-essential']
+        state: present
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: Install required packages
+      yum:
+        name: ['git', 'gcc', 'gcc-c++']
+        state: present
+      when: ansible_pkg_mgr == 'yum'
+
+    - name: Clone FIO repository
+      git:
+        repo: https://git.kernel.dk/cgit/fio.git
+        dest: /opt/fio
+        version: master
+
+    - name: Build and Install FIO
+      command: make
+      args:
+        chdir: /opt/fio
+
+    - name: Copy FIO binary to /usr/local/bin
+      copy:
+        src: /opt/fio/fio
+        dest: /usr/local/bin/fio
+        mode: '0755'
