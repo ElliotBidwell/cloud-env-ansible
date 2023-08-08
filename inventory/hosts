@@ -3,6 +3,8 @@
 ans-remote0
 ans-remote1
 ans-remote2
+ans-remote3
+ans-remote4
 127.0.0.1
 
 # Group all remote Proxmox VMs
